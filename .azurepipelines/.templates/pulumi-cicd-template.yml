@@ -124,7 +124,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
-          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
+          PULUMI_CONFIG_PASSPHRASE: ${{ parameters.PULUMI_CONFIG_PASSPHRASE }}
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -152,7 +152,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
-          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
+          PULUMI_CONFIG_PASSPHRASE: ${{ parameters.PULUMI_CONFIG_PASSPHRASE }}
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -180,7 +180,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
-          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
+          PULUMI_CONFIG_PASSPHRASE: ${{ parameters.PULUMI_CONFIG_PASSPHRASE }}
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -208,7 +208,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
-          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
+          PULUMI_CONFIG_PASSPHRASE: ${{ parameters.PULUMI_CONFIG_PASSPHRASE }}
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
