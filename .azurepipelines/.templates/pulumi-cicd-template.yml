@@ -83,8 +83,6 @@ parameters:
 
 steps:
 
-
-
   - pwsh: |
       if ($IsLinux)
       {
@@ -110,8 +108,8 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
-        displayName: pulumi up, preview
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
+        displayName: Pulumi Preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
         env:
@@ -136,10 +134,10 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
           
           pulumi up --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
-        displayName: pulumi up, preview
+        displayName: Pulumi Preview & Pulumi Up
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
         env:
@@ -164,10 +162,10 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
           
           pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
-        displayName: pulumi up, preview
+        displayName: Pulumi Preview & Pulumi Destroy
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
         env:
@@ -192,10 +190,8 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
-          
-          pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
-        displayName: pulumi up, preview
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
+        displayName: Pulumi Preview Destroy
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
         env:
