@@ -98,7 +98,7 @@ steps:
         choco install pulumi -y
       }
       
-      if ("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}" != null -And "${{ parameters.PULUMI_CONFIG_PASSPHRASE }}".isEmpty()) {
+      if ("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}" -ne $null -And [string]::IsNullOrEmpty("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}") {
         Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$(${{ parameters.PULUMI_CONFIG_PASSPHRASE }})"
       }
       else
