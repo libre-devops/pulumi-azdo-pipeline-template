@@ -184,29 +184,3 @@ steps:
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
-
-  - ${{ if and(eq(parameters.PULUMI_DESTROY, true), eq(parameters.PULUMI_PREVIEW_ONLY, true)) }}:
-
-      - pwsh: |
-          pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
-          
-          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
-        displayName: Pulumi Preview Destroy
-        workingDirectory: ${{ parameters.PULUMI_PATH }}
-        enabled: true
-        env:
-          short: ${{ parameters.SHORTHAND_PROJECT_NAME }}
-          env: ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
-          loc: ${{ parameters.SHORTHAND_LOCATION_NAME }}
-
-          AZURE_STORAGE_KEY: ${{ parameters.AZURE_STORAGE_KEY }}
-          AZURE_BLOB_CONTAINER: ${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
-          AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
-
-          PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
-          PULUMI_CONFIG_PASSPHRASE: ${{ parameters.PULUMI_CONFIG_PASSPHRASE }}
-
-          ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
