@@ -21,6 +21,11 @@ parameters:
     type: string
     displayName: "The suffix for your backend storage as per https://www.pulumi.com/docs/intro/concepts/state/"
 
+  - name: PULUMI_CONFIG_PASSPHRASE
+    default: ""
+    type: string
+    displayName: "If your stack has a password, set it in here"
+
   - name: AZURE_STORAGE_RG_NAME
     default: ""
     type: string
