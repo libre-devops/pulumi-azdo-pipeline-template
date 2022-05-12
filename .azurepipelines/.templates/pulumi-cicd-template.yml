@@ -83,6 +83,8 @@ parameters:
 
 steps:
 
+
+
   - pwsh: |
       if ($IsLinux)
       {
@@ -98,9 +100,9 @@ steps:
         choco install pulumi -y
       }
       
-      if ("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}" -ne $null -And [string]::IsNullOrEmpty("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}"))
+      if (${{ parameters.PULUMI_CONFIG_PASSPHRASE }} -ne $null -And [string]::IsNullOrEmpty(${{ parameters.PULUMI_CONFIG_PASSPHRASE }}))
       {
-        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}")"
+        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$(${{ parameters.PULUMI_CONFIG_PASSPHRASE }})"
       }
       else
       {
