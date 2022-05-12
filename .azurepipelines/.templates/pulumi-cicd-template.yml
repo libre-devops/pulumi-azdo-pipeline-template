@@ -108,7 +108,7 @@ steps:
       - pwsh: |
           pulumi --color always --emoji login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi --color always --emoji preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff --color always --emoji
+          pulumi --color always --emoji preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --diff
         displayName: Pulumi Preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
