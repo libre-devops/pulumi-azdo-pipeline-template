@@ -116,7 +116,7 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
         displayName: pulumi up, preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
@@ -142,9 +142,9 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
           
-          pulumi up --yes
+          pulumi up --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
         displayName: pulumi up, preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
@@ -170,9 +170,9 @@ steps:
       - pwsh: |
           pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
           
-          pulumi preview
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
           
-          pulumi destroy --yes
+          pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
         displayName: pulumi up, preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
@@ -200,7 +200,7 @@ steps:
           
           pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
           
-          pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }} --yes
         displayName: pulumi up, preview
         workingDirectory: ${{ parameters.PULUMI_PATH }}
         enabled: true
