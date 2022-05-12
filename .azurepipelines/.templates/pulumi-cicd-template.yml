@@ -99,15 +99,6 @@ steps:
         Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         choco install pulumi -y
       }
-      
-      if (${{ parameters.PULUMI_CONFIG_PASSPHRASE }} -ne $null -And [string]::IsNullOrEmpty(${{ parameters.PULUMI_CONFIG_PASSPHRASE }}))
-      {
-        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$(${{ parameters.PULUMI_CONFIG_PASSPHRASE }})"
-      }
-      else
-      {
-        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$("")"
-      }
     displayName: 'Pulumi Install & Prep'
     name: PrepEnv
     workingDirectory: "${{ parameters.PULUMI_PATH }}"
