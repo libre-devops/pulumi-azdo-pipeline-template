@@ -1,0 +1,204 @@
+---
+parameters:
+
+  - name: PULUMI_PATH
+    type: string
+    default: ""
+    displayName: "What is the path to your pulumi code?"
+
+  - name: PULUMI_DESTROY
+    default: false
+    type: boolean
+    displayName: "Do you wish to run pulumi destroy?"
+
+  - name: PULUMI_PREVIEW_ONLY
+    default: true
+    type: boolean
+    displayName: "Do you wish to run pulumi plan only?"
+
+  - name: PULUMI_BACKEND_URL_PREFIX
+    default: "azblob://"
+    type: string
+    displayName: "The suffix for your backend storage as per https://www.pulumi.com/docs/intro/concepts/state/"
+
+  - name: AZURE_STORAGE_RG_NAME
+    default: ""
+    type: string
+    displayName: "What is the resource group name in which the storage account exists in?"
+
+  - name: AZURE_STORAGE_ACCOUNT_NAME
+    default: ""
+    type: string
+    displayName: "What is the name of the storage account in which the state file is being stored?"
+
+  - name: AZURE_BLOB_CONTAINER_NAME
+    default: ""
+    type: string
+    displayName: "What is the name of the blob container in which the state file is being stored?"
+
+  - name: AZURE_STORAGE_KEY
+    default: ""
+    type: string
+    displayName: "What is the key used to access your storage account? Please note, this value is a secret"
+
+  - name: AZURE_TARGET_CLIENT_ID
+    default: ""
+    type: string
+    displayName: "What is the client id of the service principle you wish to use with pulumi?"
+
+  - name: AZURE_TARGET_CLIENT_SECRET
+    default: ""
+    type: string
+    displayName: "What is the client of the service principle you wish to use with pulumi?  Note, this value is a secret"
+
+  - name: AZURE_TARGET_SUBSCRIPTION_ID
+    default: ""
+    type: string
+    displayName: "What is the subscription ID of the target subscription you are trying to deploy to?"
+
+  - name: AZURE_TARGET_TENANT_ID
+    default: ""
+    type: string
+    displayName: "What is the tenant ID in which the target subscription resides?"
+
+  - name: SHORTHAND_PROJECT_NAME
+    default: ""
+    type: string
+    displayName: "What is the shorthand name for your project?"
+
+  - name: SHORTHAND_ENVIRONMENT_NAME
+    default: ""
+    type: string
+    displayName: "What is the shorthand (3 character) name for environment you are deploying to?"
+
+  - name: SHORTHAND_LOCATION_NAME
+    default: ""
+    type: string
+    displayName: "What is the shorthand location name? E.g. uks for UK South etc"
+
+steps:
+
+  - pwsh: |
+      if ($IsLinux)
+      {
+        brew install pulumi
+      }
+      elseif ($IsMacOS)
+      {
+        brew install pulumi
+      }
+      elseif ($IsWindows)
+      {
+        Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        choco install pulumi -y
+      }
+    displayName: 'Pulumi Install'
+    workingDirectory: "${{ parameters.PULUMI_PATH }}"
+    continueOnError: false
+    enabled: true
+
+  - ${{ if and(eq(parameters.PULUMI_DESTROY, false), eq(parameters.PULUMI_PREVIEW_ONLY, true)) }}:
+
+      - pwsh: |
+          pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          
+          pulumi preview
+        displayName: pulumi up, preview
+        workingDirectory: ${{ parameters.PULUMI_PATH }}
+        enabled: true
+        env:
+          short: ${{ parameters.SHORTHAND_PROJECT_NAME }}
+          env: ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          loc: ${{ parameters.SHORTHAND_LOCATION_NAME }}
+
+          AZURE_STORAGE_KEY: ${{ parameters.AZURE_STORAGE_KEY }}
+          AZURE_BLOB_CONTAINER: ${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
+
+          PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+
+          ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
+
+  - ${{ if and(eq(parameters.PULUMI_DESTROY, false), eq(parameters.PULUMI_PREVIEW_ONLY, false)) }}:
+
+      - pwsh: |
+          pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          
+          pulumi preview
+          
+          pulumi up --yes
+        displayName: pulumi up, preview
+        workingDirectory: ${{ parameters.PULUMI_PATH }}
+        enabled: true
+        env:
+          short: ${{ parameters.SHORTHAND_PROJECT_NAME }}
+          env: ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          loc: ${{ parameters.SHORTHAND_LOCATION_NAME }}
+
+          AZURE_STORAGE_KEY: ${{ parameters.AZURE_STORAGE_KEY }}
+          AZURE_BLOB_CONTAINER: ${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
+
+          PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+
+          ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
+
+  - ${{ if and(eq(parameters.PULUMI_DESTROY, true), eq(parameters.PULUMI_PREVIEW_ONLY, false)) }}:
+
+      - pwsh: |
+          pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          
+          pulumi preview
+          
+          pulumi destroy --yes
+        displayName: pulumi up, preview
+        workingDirectory: ${{ parameters.PULUMI_PATH }}
+        enabled: true
+        env:
+          short: ${{ parameters.SHORTHAND_PROJECT_NAME }}
+          env: ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          loc: ${{ parameters.SHORTHAND_LOCATION_NAME }}
+
+          AZURE_STORAGE_KEY: ${{ parameters.AZURE_STORAGE_KEY }}
+          AZURE_BLOB_CONTAINER: ${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
+
+          PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+
+          ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
+
+  - ${{ if and(eq(parameters.PULUMI_DESTROY, true), eq(parameters.PULUMI_PREVIEW_ONLY, true)) }}:
+
+      - pwsh: |
+          pulumi login ${{ parameters.PULUMI_BACKEND_URL_PREFIX }}${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          
+          pulumi preview --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          
+          pulumi destroy --stack ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+        displayName: pulumi up, preview
+        workingDirectory: ${{ parameters.PULUMI_PATH }}
+        enabled: true
+        env:
+          short: ${{ parameters.SHORTHAND_PROJECT_NAME }}
+          env: ${{ parameters.SHORTHAND_ENVIRONMENT_NAME }}
+          loc: ${{ parameters.SHORTHAND_LOCATION_NAME }}
+
+          AZURE_STORAGE_KEY: ${{ parameters.AZURE_STORAGE_KEY }}
+          AZURE_BLOB_CONTAINER: ${{ parameters.AZURE_BLOB_CONTAINER_NAME }}
+          AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
+
+          PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+
+          ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ parameters.AZURE_TARGET_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ parameters.AZURE_TARGET_TENANT_ID }}
