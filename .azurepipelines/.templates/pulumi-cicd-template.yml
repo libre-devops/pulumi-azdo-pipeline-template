@@ -92,7 +92,16 @@ steps:
         Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
         choco install pulumi -y
       }
-    displayName: 'Pulumi Install'
+      
+      if ("${{ parameters.PULUMI_CONFIG_PASSPHRASE }}" != null -And "${{ parameters.PULUMI_CONFIG_PASSPHRASE }}".isEmpty()) {
+        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$(${{ parameters.PULUMI_CONFIG_PASSPHRASE }})"
+      }
+      else
+      {
+        Write-Host "##vso[task.setvariable variable=PulumiConfigPassphrase;isOutput=true;issecret=true]$("")"
+      }
+    displayName: 'Pulumi Install & Prep'
+    name: PrepEnv
     workingDirectory: "${{ parameters.PULUMI_PATH }}"
     continueOnError: false
     enabled: true
@@ -116,6 +125,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -143,6 +153,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -170,6 +181,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
@@ -197,6 +209,7 @@ steps:
           AZURE_STORAGE_ACCOUNT: ${{ parameters.AZURE_STORAGE_ACCOUNT_NAME }}
 
           PULUMI_PATH: ${{ parameters.PULUMI_PATH }}
+          PULUMI_CONFIG_PASSPHRASE: $(PrepEnv.PulumiConfigPassphrase)
 
           ARM_CLIENT_ID: ${{ parameters.AZURE_TARGET_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ parameters.AZURE_TARGET_CLIENT_SECRET }}
